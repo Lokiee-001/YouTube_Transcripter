@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | SummifyAI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Reusing all the same CSS variables and base styles from the original */
+    :root {
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+      --text: #1e293b;
+      --text-light: #64748b;
+      --bg: #f8fafc;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --border: rgba(0, 0, 0, 0.08);
+      --shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+      --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .dark-mode {
+      --primary: #818cf8;
+      --primary-hover: #6366f1;
+      --text: #f1f5f9;
+      --text-light: #94a3b8;
+      --bg: #0f172a;
+      --card-bg: rgba(15, 23, 42, 0.85);
+      --border: rgba(255, 255, 255, 0.1);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      transition: var(--transition);
+      background-image:
+        radial-gradient(at 80% 0%, hsla(189, 100%, 56%, 0.1) 0, transparent 50%),
+        radial-gradient(at 0% 50%, hsla(355, 100%, 93%, 0.1) 0, transparent 50%);
+    }
+
+    .dark-mode body {
+      background-image:
+        radial-gradient(at 80% 0%, hsla(189, 100%, 56%, 0.05) 0, transparent 50%),
+        radial-gradient(at 0% 50%, hsla(355, 100%, 93%, 0.05) 0, transparent 50%);
+    }
+
+    /* Glassmorphism Card */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1) rotate(30deg);
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+    }
+
+    /* Navigation */
+    nav {
+      padding: 1.5rem 5%;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+    }
+
+    .navbar {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-icon {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-size: 1.8rem;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-light);
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .nav-links a.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .nav-links a.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 6px;
+      background: var(--primary);
+      border-radius: 50%;
+    }
+
+    /* Auth Buttons */
+    .auth-buttons {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--gradient);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px -5px rgba(99, 102, 241, 0.5);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+
+    .btn-outline:hover {
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    /* Main Content */
+    .main-content {
+      padding: 3rem 5%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* About Hero */
+    .about-hero {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .about-hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .about-hero p {
+      color: var(--text-light);
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    /* Mission Section */
+    .mission-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      margin-bottom: 4rem;
+    }
+
+    .mission-content h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+
+    .mission-content p {
+      color: var(--text-light);
+      margin-bottom: 1.5rem;
+    }
+
+    .mission-image {
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .mission-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Team Section */
+    .team-section {
+      margin-bottom: 4rem;
+    }
+
+    .team-section h2 {
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 3rem;
+      color: var(--text);
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .team-card {
+      text-align: center;
+      padding: 2rem;
+      border-radius: 1rem;
+      transition: var(--transition);
+    }
+
+    .team-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .team-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 1.5rem;
+      border: 3px solid rgba(99, 102, 241, 0.2);
+    }
+
+    .team-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .team-role {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .team-bio {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .social-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--primary);
+      transition: var(--transition);
+    }
+
+    .social-links a:hover {
+      background: var(--gradient);
+      color: white;
+    }
+
+    /* Values Section */
+    .values-section {
+      margin-bottom: 4rem;
+    }
+
+    .values-section h2 {
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 3rem;
+      color: var(--text);
+    }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .value-card {
+      padding: 2rem;
+      border-radius: 1rem;
+      transition: var(--transition);
+    }
+
+    .value-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .value-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .value-description {
+      color: var(--text-light);
+    }
+
+    /* CTA Section */
+    .cta-section {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-radius: 1rem;
+      background: linear-gradient(
+        135deg,
+        rgba(99, 102, 241, 0.1) 0%,
+        rgba(168, 85, 247, 0.1) 50%,
+        rgba(236, 72, 153, 0.1) 100%
+      );
+    }
+
+    .cta-section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+
+    .cta-section p {
+      color: var(--text-light);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .mission-section {
+        grid-template-columns: 1fr;
+      }
+
+      .mission-image {
+        order: -1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav-links {
+        display: none;
+      }
+
+      .about-hero h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Theme Toggle -->
+  <button class="theme-toggle glass-card" id="themeToggle">
+    <i class="fas fa-moon" id="themeIcon"></i>
+  </button>
+
+  <!-- Navigation -->
+  <nav class="glass-card">
+    <div class="navbar">
+      <a href="/" class="logo">
+        <i class="fas fa-sparkles logo-icon"></i>
+        <span>SummifyAI</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="about.html" class="active">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="auth-buttons">
+        <a href="login.html" class="btn btn-outline">
+          <i class="fas fa-sign-in-alt"></i>
+          Login
+        </a>
+        <a href="register.html" class="btn btn-primary">
+          <i class="fas fa-user-plus"></i>
+          Register
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- About Hero -->
+    <section class="about-hero">
+      <h1>Revolutionizing Content Consumption</h1>
+      <p>SummifyAI harnesses cutting-edge artificial intelligence to transform how you engage with video content, saving you time while enhancing comprehension.</p>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="mission-section glass-card" style="padding: 2rem; border-radius: 1rem;">
+      <div class="mission-content">
+        <h2>Our Mission</h2>
+        <p>In today's information-rich world, video content has become a primary source of knowledge and entertainment. However, the time required to consume this content often exceeds what busy individuals can spare.</p>
+        <p>SummifyAI was founded in 2022 with a simple goal: to develop AI-powered tools that extract the essence of video content, delivering key insights in a fraction of the time.</p>
+        <p>Our technology is particularly valuable for students, professionals, and lifelong learners who need to stay informed but face time constraints.</p>
+      </div>
+      <div class="mission-image">
+        <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80" alt="AI technology in action">
+      </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section">
+      <h2>Meet Our Team</h2>
+      <div class="team-grid">
+        <div class="team-card glass-card">
+          <img src="photo3.jpg" alt="Lokiee" class="team-avatar">
+          <h3 class="team-name">Lokeshwar</h3>
+          <p class="team-role">Front-end developer</p>
+          <p class="team-bio"> I'm a frontend developer who turns design visions into interactive, user-friendly web experiences. With a sharp eye for detail and a love for clean, responsive interfaces, I specialize in building performant and accessible applications that look great on every screen.</p>
+          <div class="social-links">
+            <a href="https://www.linkedin.com/in/lam-lokeshwar-730bb12a0/"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fas fa-envelope"></i></a>
+          </div>
+        </div>
+        <div class="team-card glass-card">
+          <img src="photo1.jpg" alt="Deepesh Kumar" class="team-avatar">
+          <h3 class="team-name">Deepesh Kumar</h3>
+          <p class="team-role">Backend-Developer</p>
+          <p class="team-bio">I'm a backend developer with a passion for building robust, scalable, and secure server-side applications. Skilled in designing and implementing RESTful APIs, optimizing database performance, and integrating third-party services. I thrive on clean code, automation, and turning complex problems into elegant backend solutions.</p>
+          <div class="social-links">
+            <a href="https://www.linkedin.com/in/deepesh-kumar-b7a582339/"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#"><i class="fab fa-github"></i></a>
+            <a href="#"><i class="fas fa-envelope"></i></a>
+          </div>
+        </div>
+        <div class="team-card glass-card">
+          <img src="photo2.jpg" alt="Siddhartha" class="team-avatar">
+          <h3 class="team-name">Siddhartha</h3>
+          <p class="team-role">Product Lead</p>
+          <p class="team-bio">I'm a backend developer with a passion for building robust, scalable, and secure server-side applications. Skilled in designing and implementing RESTful APIs, optimizing database performance, and integrating third-party services. I thrive on clean code, automation, and turning complex problems into elegant backend solutions.</p>
+          <div class="social-links">
+            <a href="https://www.linkedin.com/in/kalluri-siddhartha-14917724b/"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#"><i class="fab fa-dribbble"></i></a>
+            <a href="#"><i class="fas fa-envelope"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="values-section">
+      <h2>Our Core Values</h2>
+      <div class="values-grid">
+        <div class="value-card glass-card">
+          <div class="value-icon">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <h3 class="value-title">Efficiency</h3>
+          <p class="value-description">We believe in maximizing the value of every minute. Our technology is designed to save you time without sacrificing comprehension.</p>
+        </div>
+        <div class="value-card glass-card">
+          <div class="value-icon">
+            <i class="fas fa-brain"></i>
+          </div>
+          <h3 class="value-title">Intelligence</h3>
+          <p class="value-description">We continuously improve our AI models to deliver increasingly accurate and insightful summaries.</p>
+        </div>
+        <div class="value-card glass-card">
+          <div class="value-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3 class="value-title">Privacy</h3>
+          <p class="value-description">We respect user privacy and implement robust security measures to protect your data.</p>
+        </div>
+        <div class="value-card glass-card">
+          <div class="value-icon">
+            <i class="fas fa-graduation-cap"></i>
+          </div>
+          <h3 class="value-title">Education</h3>
+          <p class="value-description">We're committed to making knowledge more accessible to learners worldwide.</p>
+        </div>
+        <div class="value-card glass-card">
+          <div class="value-icon">
+            <i class="fas fa-heart"></i>
+          </div>
+          <h3 class="value-title">User-Centric</h3>
+          <p class="value-description">Every feature is designed with real user needs in mind, validated through extensive research.</p>
+        </div>
+        <div class="value-card glass-card">
+          <div class="value-icon">
+            <i class="fas fa-rocket"></i>
+          </div>
+          <h3 class="value-title">Innovation</h3>
+          <p class="value-description">We push boundaries in AI and UX to deliver groundbreaking solutions.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section glass-card">
+      <h2>Ready to Transform Your Learning?</h2>
+      <p>Join thousands of users who save hours every week with our AI summarization technology.</p>
+      <a href="/register" class="btn btn-primary" style="padding: 0.8rem 2rem; font-size: 1.1rem;">
+        <i class="fas fa-rocket"></i>
+        Get Started Now
+      </a>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer style="text-align: center; padding: 3rem 5%; margin-top: 4rem; border-top: 1px solid var(--border);">
+    <div class="social-links" style="display: flex; justify-content: center; gap: 1.5rem; margin: 2rem 0;">
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-youtube"></i></a>
+    </div>
+    <p class="copyright" style="color: var(--text-light); font-size: 0.875rem;">
+      © 2023 SummifyAI. All rights reserved.
+    </p>
+  </footer>
+
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const body = document.body;
+
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      if (body.classList.contains('dark-mode')) {
+        themeIcon.classList.replace('fa-moon', 'fa-sun');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        themeIcon.classList.replace('fa-sun', 'fa-moon');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+
+    // Check for saved theme preference
+    if (localStorage.getItem('theme') === 'dark') {
+      body.classList.add('dark-mode');
+      themeIcon.classList.replace('fa-moon', 'fa-sun');
+    }
+  </script>
+</body>
+</html>

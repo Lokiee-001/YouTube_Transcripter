@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | SummifyAI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Reusing all the same CSS variables and base styles from the original */
+    :root {
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+      --text: #1e293b;
+      --text-light: #64748b;
+      --bg: #f8fafc;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --border: rgba(0, 0, 0, 0.08);
+      --shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+      --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .dark-mode {
+      --primary: #818cf8;
+      --primary-hover: #6366f1;
+      --text: #f1f5f9;
+      --text-light: #94a3b8;
+      --bg: #0f172a;
+      --card-bg: rgba(15, 23, 42, 0.85);
+      --border: rgba(255, 255, 255, 0.1);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      transition: var(--transition);
+      background-image:
+        radial-gradient(at 80% 0%, hsla(189, 100%, 56%, 0.1) 0, transparent 50%),
+        radial-gradient(at 0% 50%, hsla(355, 100%, 93%, 0.1) 0, transparent 50%);
+    }
+
+    .dark-mode body {
+      background-image:
+        radial-gradient(at 80% 0%, hsla(189, 100%, 56%, 0.05) 0, transparent 50%),
+        radial-gradient(at 0% 50%, hsla(355, 100%, 93%, 0.05) 0, transparent 50%);
+    }
+
+    /* Glassmorphism Card */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1) rotate(30deg);
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+    }
+
+    /* Navigation */
+    nav {
+      padding: 1.5rem 5%;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+    }
+
+    .navbar {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-icon {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-size: 1.8rem;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-light);
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .nav-links a.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .nav-links a.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 6px;
+      background: var(--primary);
+      border-radius: 50%;
+    }
+
+    /* Auth Buttons */
+    .auth-buttons {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--gradient);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px -5px rgba(99, 102, 241, 0.5);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+
+    .btn-outline:hover {
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    /* Main Content */
+    .main-content {
+      padding: 2rem 5%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      padding: 1.5rem;
+      border-radius: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .stat-label {
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+
+    .stat-change {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.875rem;
+    }
+
+    .stat-change.positive {
+      color: #10b981;
+    }
+
+    .stat-change.negative {
+      color: #ef4444;
+    }
+
+    /* Recent Summaries */
+    .recent-summaries {
+      margin-top: 2rem;
+    }
+
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .summary-table th {
+      text-align: left;
+      padding: 1rem;
+      color: var(--text-light);
+      font-weight: 500;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .summary-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .summary-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .summary-table tr:hover td {
+      background: rgba(99, 102, 241, 0.05);
+    }
+
+    .video-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .video-thumbnail {
+      width: 60px;
+      height: 45px;
+      border-radius: 0.5rem;
+      object-fit: cover;
+    }
+
+    .video-title {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .video-channel {
+      font-size: 0.875rem;
+      color: var(--text-light);
+    }
+
+    .action-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: var(--transition);
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+    }
+
+    .action-btn:hover {
+      color: var(--primary);
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Theme Toggle -->
+  <button class="theme-toggle glass-card" id="themeToggle">
+    <i class="fas fa-moon" id="themeIcon"></i>
+  </button>
+
+  <!-- Navigation -->
+  <nav class="glass-card">
+    <div class="navbar">
+      <a href="/" class="logo">
+        <i class="fas fa-sparkles logo-icon"></i>
+        <span>SummifyAI</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="dashboard.html" class="active">Dashboard</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="auth-buttons">
+        <div class="user-menu">
+          <button class="btn btn-outline">
+            <i class="fas fa-user-circle"></i>
+            <span>My Account</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="dashboard-header">
+      <h1>Dashboard Overview</h1>
+      <button class="btn btn-primary">
+        <i class="fas fa-plus"></i>
+        New Summary
+      </button>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card glass-card">
+        <div class="stat-value">142</div>
+        <div class="stat-label">Total Summaries</div>
+        <div class="stat-change positive">
+          <i class="fas fa-arrow-up"></i>
+          <span>12% from last week</span>
+        </div>
+      </div>
+      <div class="stat-card glass-card">
+        <div class="stat-value">8.2</div>
+        <div class="stat-label">Avg. Saved Hours</div>
+        <div class="stat-change positive">
+          <i class="fas fa-arrow-up"></i>
+          <span>5% from last week</span>
+        </div>
+      </div>
+      <div class="stat-card glass-card">
+        <div class="stat-value">94%</div>
+        <div class="stat-label">Accuracy Rate</div>
+        <div class="stat-change">
+          <span>No change</span>
+        </div>
+      </div>
+      <div class="stat-card glass-card">
+        <div class="stat-value">32</div>
+        <div class="stat-label">Favorites</div>
+        <div class="stat-change positive">
+          <i class="fas fa-arrow-up"></i>
+          <span>3 new this week</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Summaries -->
+    <div class="recent-summaries glass-card" style="padding: 1.5rem; border-radius: 1rem;">
+      <h2 style="margin-bottom: 1rem;">Recent Summaries</h2>
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th>Video</th>
+            <th>Date</th>
+            <th>Duration</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="video-info">
+                <img src="https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="Video thumbnail" class="video-thumbnail">
+                <div>
+                  <div class="video-title">The Future of AI in 2023</div>
+                  <div class="video-channel">Tech Insights</div>
+                </div>
+              </div>
+            </td>
+            <td>Today, 10:45 AM</td>
+            <td>24:32</td>
+            <td>
+              <button class="action-btn" title="View">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="action-btn" title="Download">
+                <i class="fas fa-download"></i>
+              </button>
+              <button class="action-btn" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="video-info">
+                <img src="https://i.ytimg.com/vi/9bZkp7q19f0/hqdefault.jpg" alt="Video thumbnail" class="video-thumbnail">
+                <div>
+                  <div class="video-title">Machine Learning Fundamentals</div>
+                  <div class="video-channel">AI University</div>
+                </div>
+              </div>
+            </td>
+            <td>Yesterday, 3:22 PM</td>
+            <td>42:15</td>
+            <td>
+              <button class="action-btn" title="View">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="action-btn" title="Download">
+                <i class="fas fa-download"></i>
+              </button>
+              <button class="action-btn" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="video-info">
+                <img src="https://i.ytimg.com/vi/JGwWNGJdvx8/hqdefault.jpg" alt="Video thumbnail" class="video-thumbnail">
+                <div>
+                  <div class="video-title">Productivity Hacks for Developers</div>
+                  <div class="video-channel">Code Masters</div>
+                </div>
+              </div>
+            </td>
+            <td>May 15, 2023</td>
+            <td>18:47</td>
+            <td>
+              <button class="action-btn" title="View">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="action-btn" title="Download">
+                <i class="fas fa-download"></i>
+              </button>
+              <button class="action-btn" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="video-info">
+                <img src="https://i.ytimg.com/vi/kXYiU_JCYtU/hqdefault.jpg" alt="Video thumbnail" class="video-thumbnail">
+                <div>
+                  <div class="video-title">Advanced Python Techniques</div>
+                  <div class="video-channel">Python Experts</div>
+                </div>
+              </div>
+            </td>
+            <td>May 14, 2023</td>
+            <td>36:12</td>
+            <td>
+              <button class="action-btn" title="View">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="action-btn" title="Download">
+                <i class="fas fa-download"></i>
+              </button>
+              <button class="action-btn" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const body = document.body;
+
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      if (body.classList.contains('dark-mode')) {
+        themeIcon.classList.replace('fa-moon', 'fa-sun');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        themeIcon.classList.replace('fa-sun', 'fa-moon');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+
+    // Check for saved theme preference
+    if (localStorage.getItem('theme') === 'dark') {
+      body.classList.add('dark-mode');
+      themeIcon.classList.replace('fa-moon', 'fa-sun');
+    }
+  </script>
+</body>
+</html>

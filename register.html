@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - SummifyAI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+      --text: #1e293b;
+      --text-light: #64748b;
+      --bg: #f8fafc;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --border: rgba(0, 0, 0, 0.08);
+      --shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+      --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .dark-mode {
+      --primary: #818cf8;
+      --primary-hover: #6366f1;
+      --text: #f1f5f9;
+      --text-light: #94a3b8;
+      --bg: #0f172a;
+      --card-bg: rgba(15, 23, 42, 0.85);
+      --border: rgba(255, 255, 255, 0.1);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      transition: var(--transition);
+      background-image:
+        radial-gradient(at 80% 0%, hsla(189, 100%, 56%, 0.1) 0, transparent 50%),
+        radial-gradient(at 0% 50%, hsla(355, 100%, 93%, 0.1) 0, transparent 50%);
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    .dark-mode body {
+      background-image:
+        radial-gradient(at 80% 0%, hsla(189, 100%, 56%, 0.05) 0, transparent 50%),
+        radial-gradient(at 0% 50%, hsla(355, 100%, 93%, 0.05) 0, transparent 50%);
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1) rotate(30deg);
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+    }
+
+    /* Glassmorphism Card */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    /* Navigation */
+    nav {
+      padding: 1.5rem 5%;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+    }
+
+    .navbar {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-icon {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-size: 2.2rem;
+    }
+
+    /* Auth Container */
+    .auth-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 500px;
+      padding: 3rem;
+      border-radius: 1.5rem;
+      text-align: center;
+    }
+
+    .auth-header {
+      margin-bottom: 2.5rem;
+    }
+
+    .auth-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .auth-header p {
+      color: var(--text-light);
+      font-size: 1.1rem;
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 1.75rem;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.75rem;
+      font-weight: 500;
+      color: var(--text);
+      font-size: 1.1rem;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      font-size: 1.1rem;
+      transition: var(--transition);
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    .btn {
+      padding: 1.1rem 1.75rem;
+      border-radius: 1rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      border: none;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: var(--gradient);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px -5px rgba(99, 102, 241, 0.5);
+    }
+
+    .auth-footer {
+      margin-top: 2rem;
+      color: var(--text-light);
+      font-size: 1.05rem;
+    }
+
+    .auth-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 2rem 0;
+      color: var(--text-light);
+      font-size: 1.05rem;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .divider::before {
+      margin-right: 1.25rem;
+    }
+
+    .divider::after {
+      margin-left: 1.25rem;
+    }
+
+    .social-login {
+      display: flex;
+      gap: 1.25rem;
+      margin-top: 1.75rem;
+    }
+
+    .social-btn {
+      flex: 1;
+      padding: 0.9rem;
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      background: transparent;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .social-btn:hover {
+      background: rgba(99, 102, 241, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 1.25rem;
+      height: 1.25rem;
+      accent-color: var(--primary);
+    }
+
+    .checkbox-group label {
+      font-size: 0.95rem;
+      color: var(--text-light);
+    }
+
+    /* Alert Messages */
+    .alert {
+      padding: 1rem 1.5rem;
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.05rem;
+    }
+
+    .alert-error {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border-left: 4px solid #ef4444;
+    }
+
+    .alert-success {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      border-left: 4px solid #10b981;
+    }
+
+    /* Password Strength */
+    .password-strength {
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 4px;
+      margin-top: 0.5rem;
+      overflow: hidden;
+    }
+
+    .strength-meter {
+      height: 100%;
+      width: 0%;
+      border-radius: 4px;
+      transition: width 0.3s ease, background-color 0.3s ease;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      margin-top: auto;
+      color: var(--text-light);
+      font-size: 0.95rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Welcome Overlay */
+    .welcome-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--gradient);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      transform: scale(0.95);
+      overflow: hidden;
+    }
+
+    .welcome-overlay.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1);
+    }
+
+    .welcome-content {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      width: 90%;
+      max-width: 800px;
+    }
+
+    .welcome-title {
+      font-size: 5rem;
+      font-weight: 900;
+      color: white;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1.2s 0.8s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .name-container {
+      display: inline-block;
+      position: relative;
+      height: 8rem;
+      margin: 2.5rem 0;
+      perspective: 1000px;
+      white-space: nowrap;
+    }
+
+    .name-letter {
+      position: relative;
+      display: inline-block;
+      font-size: 7rem;
+      font-weight: 900;
+      color: white;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      transform-style: preserve-3d;
+      opacity: 0;
+      animation: letterFlyIn 1.2s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      text-transform: uppercase;
+    }
+
+    .name-space {
+      display: inline-block;
+      width: 3rem;
+    }
+
+    @keyframes letterFlyIn {
+      0% {
+        transform: translateY(120px) rotateX(90deg) rotateY(30deg) scale(0.8);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0) rotateX(0) rotateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    .welcome-subtext {
+      font-size: 2rem;
+      color: rgba(255, 255, 255, 0.9);
+      margin: 3rem 0;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1.2s 2.5s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .progress-container {
+      width: 500px;
+      height: 15px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 3rem auto;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: white;
+      border-radius: 8px;
+      transition: width 8s cubic-bezier(0.65, 0, 0.35, 1);
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+    }
+
+    .logo-animation {
+      font-size: 8rem;
+      margin-bottom: 3rem;
+      display: inline-block;
+      color: white;
+      text-shadow: 0 0 40px rgba(255, 255, 255, 0.7);
+      opacity: 0;
+      transform: scale(0.5);
+      animation: logoEntrance 1.5s 0.3s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                 pulse 2.5s 2s infinite ease-in-out,
+                 float 6s 2s infinite ease-in-out;
+    }
+
+    @keyframes logoEntrance {
+      to {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+      }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-25px); }
+    }
+
+    /* Particle Effects */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      animation: floatParticle 25s infinite linear;
+    }
+
+    @keyframes floatParticle {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.8;
+      }
+      90% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    /* Glow Effects */
+    .glow {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 70%);
+      filter: blur(40px);
+      opacity: 0;
+      animation: glowPulse 8s infinite alternate;
+      z-index: 1;
+    }
+
+    @keyframes glowPulse {
+      0% { transform: scale(0.8); opacity: 0; }
+      50% { opacity: 0.4; }
+      100% { transform: scale(1.8); opacity: 0; }
+    }
+
+    /* Confetti */
+    .confetti {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      opacity: 0;
+      animation: confettiFall 6s linear forwards;
+      z-index: 1;
+    }
+
+    @keyframes confettiFall {
+      0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(1080deg);
+        opacity: 0;
+      }
+    }
+
+    /* Light Rays */
+    .light-ray {
+      position: absolute;
+      width: 2px;
+      height: 100vh;
+      background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%);
+      animation: rayRotate 40s infinite linear;
+      transform-origin: bottom center;
+      z-index: 1;
+    }
+
+    @keyframes rayRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Floating Stars */
+    .star {
+      position: absolute;
+      color: white;
+      font-size: 1.5rem;
+      opacity: 0;
+      animation: starTwinkle 4s infinite alternate;
+      z-index: 1;
+    }
+
+    @keyframes starTwinkle {
+      0% { opacity: 0.2; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Digital Rain Effect */
+    .digital-rain {
+      position: absolute;
+      color: rgba(255,255,255,0.1);
+      font-family: monospace;
+      font-size: 1.2rem;
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      z-index: 1;
+      animation: digitalRain 15s linear infinite;
+    }
+
+    @keyframes digitalRain {
+      from { transform: translateY(-100%); }
+      to { transform: translateY(100vh); }
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 1200px) {
+      .welcome-title {
+        font-size: 4rem;
+      }
+
+      .name-letter {
+        font-size: 5.5rem;
+      }
+
+      .name-container {
+        height: 6.5rem;
+      }
+
+      .welcome-subtext {
+        font-size: 1.8rem;
+      }
+
+      .logo-animation {
+        font-size: 6rem;
+      }
+
+      .progress-container {
+        width: 400px;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .welcome-title {
+        font-size: 3.5rem;
+      }
+
+      .name-letter {
+        font-size: 4.5rem;
+      }
+
+      .name-container {
+        height: 5.5rem;
+      }
+
+      .welcome-subtext {
+        font-size: 1.5rem;
+      }
+
+      .logo-animation {
+        font-size: 5rem;
+      }
+
+      .progress-container {
+        width: 350px;
+        height: 12px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .auth-card {
+        padding: 2.5rem 2rem;
+        max-width: 450px;
+      }
+
+      .social-login {
+        flex-direction: column;
+      }
+
+      .welcome-title {
+        font-size: 3rem;
+      }
+
+      .name-letter {
+        font-size: 3.5rem;
+      }
+
+      .name-container {
+        height: 4rem;
+      }
+
+      .welcome-subtext {
+        font-size: 1.3rem;
+        margin: 2rem 0;
+      }
+
+      .logo-animation {
+        font-size: 4rem;
+        margin-bottom: 2rem;
+      }
+
+      .progress-container {
+        width: 300px;
+        height: 10px;
+        margin: 2rem auto;
+      }
+
+      .auth-header h1 {
+        font-size: 2.2rem;
+      }
+
+      .form-control, .btn {
+        padding: 0.9rem 1.25rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .welcome-title {
+        font-size: 2.5rem;
+      }
+
+      .name-letter {
+        font-size: 2.8rem;
+      }
+
+      .name-container {
+        height: 3.2rem;
+      }
+
+      .welcome-subtext {
+        font-size: 1.1rem;
+      }
+
+      .logo-animation {
+        font-size: 3.5rem;
+      }
+
+      .progress-container {
+        width: 250px;
+      }
+
+      .auth-card {
+        padding: 2rem 1.5rem;
+      }
+
+      .auth-header h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Welcome Overlay -->
+  <div class="welcome-overlay" id="welcomeOverlay">
+    <!-- Background Elements -->
+    <div class="glow" style="top: 15%; left: 15%; animation-delay: 1s;"></div>
+    <div class="glow" style="bottom: 10%; right: 10%; animation-delay: 1.5s;"></div>
+
+    <!-- Light Rays -->
+    <div class="light-ray" style="left: 20%; animation-delay: 0.8s;"></div>
+    <div class="light-ray" style="left: 40%; animation-delay: 1.2s;"></div>
+    <div class="light-ray" style="left: 60%; animation-delay: 1.6s;"></div>
+    <div class="light-ray" style="left: 80%; animation-delay: 2s;"></div>
+
+    <!-- Digital Rain -->
+    <div id="digitalRainContainer"></div>
+
+    <!-- Content -->
+    <div class="welcome-content">
+      <div class="logo-animation">
+        <i class="fas fa-sparkles"></i>
+      </div>
+      <div class="welcome-title">Welcome</div>
+      <div class="name-container" id="nameContainer"></div>
+      <div class="welcome-subtext">Your SummifyAI account is ready</div>
+      <div class="progress-container">
+        <div class="progress-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Theme Toggle -->
+  <button class="theme-toggle glass-card" id="themeToggle">
+    <i class="fas fa-moon" id="themeIcon"></i>
+  </button>
+
+  <!-- Navigation -->
+  <nav class="glass-card">
+    <div class="navbar">
+      <a href="/" class="logo">
+        <i class="fas fa-sparkles logo-icon"></i>
+        <span>SummifyAI</span>
+      </a>
+      <div>
+        Already have an account? <a href="login.html" style="color: var(--primary); text-decoration: none; font-weight: 500;">Sign in</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Auth Container -->
+  <div class="auth-container">
+    <div class="auth-card glass-card">
+      <div class="auth-header">
+        <h1>Create Account</h1>
+        <p>Get started with SummifyAI today</p>
+      </div>
+
+      <!-- Error Alert (hidden by default) -->
+      <div class="alert alert-error" id="errorAlert" style="display: none;">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="errorMessage">Please fill in all fields</span>
+      </div>
+
+      <form id="registerForm">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" class="form-control" placeholder="John Doe" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" class="form-control" placeholder="you@example.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+          <div class="password-strength">
+            <div class="strength-meter" id="strengthMeter"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" class="form-control" placeholder="••••••••" required>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="terms" required>
+          <label for="terms">I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a></label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-user-plus"></i>
+          Create Account
+        </button>
+      </form>
+
+      <div class="divider">or continue with</div>
+
+      <div class="social-login">
+        <button class="social-btn">
+          <i class="fab fa-google" style="color: #DB4437;"></i>
+        </button>
+        <button class="social-btn">
+          <i class="fab fa-github"></i>
+        </button>
+        <button class="social-btn">
+          <i class="fab fa-microsoft" style="color: #0078D4;"></i>
+        </button>
+      </div>
+
+      <div class="auth-footer">
+        Already have an account? <a href="login.html">Sign in</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p class="copyright">© 2025 SummifyAI. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const body = document.body;
+
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      if (body.classList.contains('dark-mode')) {
+        themeIcon.classList.replace('fa-moon', 'fa-sun');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        themeIcon.classList.replace('fa-sun', 'fa-moon');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+
+    // Check for saved theme preference
+    if (localStorage.getItem('theme') === 'dark') {
+      body.classList.add('dark-mode');
+      themeIcon.classList.replace('fa-moon', 'fa-sun');
+    }
+
+    // Password Strength Meter
+    const passwordInput = document.getElementById('password');
+    const strengthMeter = document.getElementById('strengthMeter');
+
+    passwordInput.addEventListener('input', function() {
+      const password = this.value;
+      let strength = 0;
+
+      // Length check
+      if (password.length >= 8) strength++;
+
+      // Contains uppercase
+      if (/[A-Z]/.test(password)) strength++;
+
+      // Contains number
+      if (/[0-9]/.test(password)) strength++;
+
+      // Contains special char
+      if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+      // Update meter
+      const width = strength * 25;
+      strengthMeter.style.width = `${width}%`;
+
+      // Update color
+      const colors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6'];
+      strengthMeter.style.backgroundColor = colors[strength - 1] || '#ef4444';
+    });
+
+    // Create digital rain effect
+    function createDigitalRain() {
+      const container = document.getElementById('digitalRainContainer');
+      const characters = "01";
+      const columns = Math.floor(window.innerWidth / 20);
+
+      for (let i = 0; i < columns; i++) {
+        const rain = document.createElement('div');
+        rain.className = 'digital-rain';
+        rain.style.left = (i * 20) + 'px';
+        rain.style.animationDelay = Math.random() * 5 + 's';
+        rain.style.animationDuration = (Math.random() * 10 + 10) + 's';
+
+        let content = '';
+        const length = Math.floor(Math.random() * 30 + 20);
+        for (let j = 0; j < length; j++) {
+          content += characters.charAt(Math.floor(Math.random() * characters.length)) + '\n';
+        }
+
+        rain.textContent = content;
+        container.appendChild(rain);
+      }
+    }
+
+    // Form Submission
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Get form values
+      const fullName = document.getElementById('fullName').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const terms = document.getElementById('terms').checked;
+
+      // Validation
+      if (!fullName || !email || !password || !confirmPassword || !terms) {
+        showError('Please fill in all fields and accept the terms');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showError('Passwords do not match');
+        return;
+      }
+
+      if (password.length < 8) {
+        showError('Password must be at least 8 characters');
+        return;
+      }
+
+      // Show welcome animation
+      const welcomeOverlay = document.getElementById('welcomeOverlay');
+      welcomeOverlay.classList.add('active');
+
+      // Create digital rain
+      createDigitalRain();
+
+      // Animate name letters
+      animateNameLetters(fullName);
+
+      // Start progress bar animation
+      document.querySelector('.progress-bar').style.width = '100%';
+
+      // Create background effects
+      createBackgroundEffects();
+
+      // Here you would typically send the data to your server
+      console.log('Registration attempt with:', { fullName, email, password });
+
+      // After 8 seconds, redirect to index page
+      setTimeout(() => {
+        // Create confetti before redirect
+        createConfetti();
+        createStars();
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 2000);
+      }, 8000);
+    });
+
+    function animateNameLetters(name) {
+      const nameContainer = document.getElementById('nameContainer');
+      nameContainer.innerHTML = '';
+
+      // Split name into characters and convert to uppercase
+      const characters = name.toUpperCase().split('');
+
+      characters.forEach((char, index) => {
+        if (char === ' ') {
+          // Add space element
+          const space = document.createElement('span');
+          space.className = 'name-space';
+          nameContainer.appendChild(space);
+        } else {
+          // Add letter element
+          const span = document.createElement('span');
+          span.textContent = char;
+          span.className = 'name-letter';
+          span.style.animationDelay = `${index * 0.2 + 1.5}s`;
+          nameContainer.appendChild(span);
+        }
+      });
+    }
+
+    function createBackgroundEffects() {
+      const overlay = document.getElementById('welcomeOverlay');
+      const colors = ['#ff3366', '#3366ff', '#ffcc33', '#33ccff', '#ff33cc', '#33ff66'];
+
+      // Create particles
+      for (let i = 0; i < 200; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        const size = Math.random() * 15 + 5;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+        particle.style.left = Math.random() * 100 + 'vw';
+        particle.style.bottom = -size + 'px';
+        particle.style.animationDuration = Math.random() * 20 + 20 + 's';
+        particle.style.animationDelay = Math.random() * 5 + 's';
+        overlay.appendChild(particle);
+      }
+    }
+
+    function createConfetti() {
+      const overlay = document.getElementById('welcomeOverlay');
+      const colors = ['#ff3366', '#3366ff', '#ffcc33', '#33ccff', '#ff33cc', '#33ff66', '#ffffff'];
+
+      // Create confetti
+      for (let i = 0; i < 250; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.width = Math.random() * 15 + 5 + 'px';
+        confetti.style.height = Math.random() * 15 + 5 + 'px';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.top = -20 + 'px';
+        confetti.style.animationDuration = Math.random() * 4 + 3 + 's';
+        confetti.style.animationDelay = Math.random() * 0.5 + 's';
+        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+        overlay.appendChild(confetti);
+      }
+    }
+
+    function createStars() {
+      const overlay = document.getElementById('welcomeOverlay');
+
+      // Create stars
+      for (let i = 0; i < 75; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.innerHTML = '★';
+        star.style.left = Math.random() * 100 + 'vw';
+        star.style.top = Math.random() * 100 + 'vh';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        star.style.fontSize = (Math.random() * 2 + 1.5) + 'rem';
+        star.style.color = `rgba(255,255,255,${Math.random() * 0.5 + 0.5})`;
+        overlay.appendChild(star);
+      }
+    }
+
+    function showError(message) {
+      const errorAlert = document.getElementById('errorAlert');
+      const errorMessage = document.getElementById('errorMessage');
+
+      errorMessage.textContent = message;
+      errorAlert.style.display = 'flex';
+
+      // Hide error after 5 seconds
+      setTimeout(() => {
+        errorAlert.style.display = 'none';
+      }, 5000);
+    }
+  </script>
+</body>
+</html>
